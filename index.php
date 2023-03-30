@@ -15,15 +15,17 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Main file to view greetings.
  *
  * @package     local_greetings
  * @copyright   2023 Ifraim Solomonov <solomonov@sfedu.ru>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// 1. Требование конфиг файла в корне Moodle.
+// 1.1 Требование конфиг файла в корне Moodle.
 require_once('../../config.php');
+// 1.2 Подключаем новый файл lib.php.
+require_once($CFG->dirroot.'/local/greetings/lib.php');
 // 2. Устанавливаем контекст страницы. В данном случае используется системный контекст.
 $context = context_system::instance();
 $PAGE->set_context($context);
@@ -40,9 +42,9 @@ $PAGE->set_heading(get_string('pluginname', 'local_greetings'));
 echo $OUTPUT->header();
 
 if (isloggedin()) {
-    echo '<h2>Здарова, '.fullname($USER).'!</h2>';
+    echo local_greetings_get_greeting($USER);
 } else {
-    echo '<h2>Здарова, кто бы ты ни был!</h2>';
+    echo get_string('greetinguser', 'local_greetings');
 }
 
 echo $OUTPUT->footer();
