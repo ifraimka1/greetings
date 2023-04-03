@@ -30,9 +30,11 @@ $string['pluginname'] = 'Greetings';
 // 2. Строки для авторизованного и неавторизованного пользователей.
 $string['greetinguser'] = 'Hey, dude!';
 $string['greetingloggedinuser'] = 'Hey, {$a}!';
-// 3. Kокализованные приветствия для Австралии, Фиджи, Новой Зеландии, Испании и России.
+// 3. Локализованные приветствия для Австралии, Фиджи, Новой Зеландии, Испании и России.
 $string['greetingloggedinuserau'] = 'Hello, {$a}!';
 $string['greetingloggedinuseres'] = 'Hola, {$a}!';
 $string['greetingloggedinuserfj'] = 'Bula, {$a}!';
 $string['greetingloggedinusernz'] = 'Kia Ora, {$a}!';
 $string['greetingloggedinuserru'] = 'Здарова, {$a}!';
+// 4. Строка для текстового поля формы message_form.
+$string['yourmessage'] = 'Your message';

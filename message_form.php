@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Plugin message form is defined here.
  *
  * @package     local_greetings
  * @copyright   2023 Ifraim Solomonov <solomonov@sfedu.ru>
@@ -23,9 +23,24 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+require_once($CFG->libdir . '/formslib.php');
 
-$plugin->component = 'local_greetings';
-$plugin->release = '0.1.0';
-$plugin->version = 2023040300;
-$plugin->requires = 2020061500;
-$plugin->maturity = MATURITY_ALPHA;
+/**
+ * Класс формы сообщений.
+ */
+class local_greetings_message_form extends moodleform {
+    /**
+     * Определяем форму
+     */
+    public function definition() {
+        $mform = $this->_form; // 1. Не забываем про lowdash.
+
+        // 2. Добавляем текстовую область на форме.
+        $mform->addElement('textarea', 'message', get_string('yourmessage', 'local_greetings'));
+        $mform->setType('message', PARAM_TEXT);
+
+        // 3. Добавляем кнопку отправки.
+        $submitlabel = get_string('submit');
+        $mform->addElement('submit', 'submitmessage', $submitlabel);
+    }
+}

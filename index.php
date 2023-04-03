@@ -25,7 +25,9 @@
 // 1.1 Требование конфиг файла в корне Moodle.
 require_once('../../config.php');
 // 1.2 Подключаем новый файл lib.php.
-require_once($CFG->dirroot.'/local/greetings/lib.php');
+require_once($CFG->dirroot . '/local/greetings/lib.php');
+// 1.3 Подключаем форму message_form.php
+require_once($CFG->dirroot . '/local/greetings/message_form.php');
 // 2. Устанавливаем контекст страницы. В данном случае используется системный контекст.
 $context = context_system::instance();
 $PAGE->set_context($context);
@@ -38,7 +40,9 @@ $PAGE->set_title($SITE->fullname);
 // 6. Устанавливаем заголовок.
 $PAGE->set_heading(get_string('pluginname', 'local_greetings'));
 
-// 7. Вывод HTML.
+// 7. Создание объекта формы.
+$messageform = new local_greetings_message_form();
+// 8. Вывод HTML.
 echo $OUTPUT->header();
 
 if (isloggedin()) {
@@ -46,5 +50,10 @@ if (isloggedin()) {
 } else {
     echo get_string('greetinguser', 'local_greetings');
 }
+
+$messageform->display(); // 8.1 Вывод формы.
+
+$message = required_param('message', PARAM_TEXT);
+echo $OUTPUT->heading($message, 4);
 
 echo $OUTPUT->footer();
