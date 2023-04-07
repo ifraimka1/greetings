@@ -38,3 +38,6 @@ $string['greetingloggedinusernz'] = 'Kia Ora, {$a}!';
 $string['greetingloggedinuserru'] = 'Здарова, {$a}!';
 // 4. Строка для текстового поля формы message_form.
 $string['yourmessage'] = 'Your message';
+// 5. Строка автора
+$string['postedby'] = 'Posted by {$a}';
+$string['postedbyru'] = 'Чирканул {$a}';

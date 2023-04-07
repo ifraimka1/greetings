@@ -42,6 +42,19 @@ $PAGE->set_heading(get_string('pluginname', 'local_greetings'));
 
 // 7. Создание объекта формы.
 $messageform = new local_greetings_message_form();
+
+if ($data = $messageform->get_data()) {
+    $message = required_param('message', PARAM_TEXT);
+
+    if (!empty($message)) {
+        $record = new stdClass;
+        $record->message = $message;
+        $record->timecreated = time();
+
+        $DB->insert_record('local_greetings_messages', $record);
+    }
+}
+
 // 8. Вывод HTML.
 echo $OUTPUT->header();
 
@@ -52,8 +65,30 @@ if (isloggedin()) {
 }
 
 $messageform->display(); // 8.1 Вывод формы.
+$userfields = \core_user\fields::for_name()->with_identity($context);
+$userfieldssql = $userfields->get_sql('u');
 
-$message = required_param('message', PARAM_TEXT);
-echo $OUTPUT->heading($message, 4);
+$sql = "SELECT m.id, m.message, m.timecreated, m.userid {$userfieldssql->selects}
+          FROM {local_greetings_messages} m
+     LEFT JOIN {user} u ON u.id = m.userid
+      ORDER BY timecreated DESC";
+
+$messages = $DB->get_records_sql($sql);
+
+echo $OUTPUT->box_start('card-columns');
+
+foreach ($messages as $m) {
+    echo html_writer::start_tag('div', array('class' => 'card'));
+    echo html_writer::start_tag('div', array('class' => 'card-body'));
+    echo html_writer::tag('p', $m->message, array('class' => 'card-text'));
+    echo html_writer::tag('p', get_string('postedby', 'local_greetings', $m->firstname), array('class' => 'card-text'));
+    echo html_writer::start_tag('p', array('class' => 'card-text'));
+    echo html_writer::tag('small', userdate($m->timecreated), array('class' => 'card'));
+    echo html_writer::end_tag('p');
+    echo html_writer::end_tag('div');
+    echo html_writer::end_tag('div');
+}
+
+echo $OUTPUT->box_end();
 
 echo $OUTPUT->footer();
