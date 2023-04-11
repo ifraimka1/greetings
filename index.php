@@ -39,6 +39,13 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title($SITE->fullname);
 // 6. Устанавливаем заголовок.
 $PAGE->set_heading(get_string('pluginname', 'local_greetings'));
+// 6.5.1 Требуем от пользователей входа в систему
+require_login();
+
+// 6.5.2 Запрещаем доступ гостю
+if (isguestuser()) {
+    throw new moodle_exception('noguest');
+}
 
 // 7. Создание объекта формы.
 $messageform = new local_greetings_message_form();
@@ -80,7 +87,7 @@ echo $OUTPUT->box_start('card-columns');
 foreach ($messages as $m) {
     echo html_writer::start_tag('div', array('class' => 'card'));
     echo html_writer::start_tag('div', array('class' => 'card-body'));
-    echo html_writer::tag('p', $m->message, array('class' => 'card-text'));
+    echo html_writer::tag('p', format_text($m->message, FORMAT_PLAIN), array('class' => 'card-text'));
     echo html_writer::tag('p', get_string('postedby', 'local_greetings', $m->firstname), array('class' => 'card-text'));
     echo html_writer::start_tag('p', array('class' => 'card-text'));
     echo html_writer::tag('small', userdate($m->timecreated), array('class' => 'card'));
