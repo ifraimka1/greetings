@@ -41,3 +41,7 @@ $string['yourmessage'] = 'Your message';
 // 5. Строка автора
 $string['postedby'] = 'Posted by {$a}';
 $string['postedbyru'] = 'Чирканул {$a}';
+// 6. Для возможностей (access.php)
+$string['greetings:viewmessages'] = 'View messages on the Greetings wall';
+$string['greetings:postmessages'] = 'Post a new message on the Greetings wall';
+$string['greetings:deleteanymessage'] = 'Delete any message on the Greetings wall';
