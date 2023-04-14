@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Permissions are defined here.
  *
  * @package     local_greetings
  * @copyright   2023 Ifraim Solomonov <solomonov@sfedu.ru>

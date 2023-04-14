@@ -38,11 +38,14 @@ $string['greetingloggedinusernz'] = 'Kia Ora, {$a}!';
 $string['greetingloggedinuserru'] = 'Здарова, {$a}!';
 // 4. Строка для текстового поля формы message_form.
 $string['yourmessage'] = 'Your message';
-// 5. Строка автора
+// 5. Строка автора.
 $string['postedby'] = 'Posted by {$a}';
 $string['postedbyru'] = 'Чирканул {$a}';
-// 6. Для возможностей (access.php)
+// 6. Для возможностей (access.php).
 $string['greetings:viewmessages'] = 'View messages on the Greetings wall';
 $string['greetings:postmessages'] = 'Post a new message on the Greetings wall';
 $string['greetings:deleteanymessage'] = 'Delete any message on the Greetings wall';
 $string['greetings:deletemessage'] = 'Delete user\'s message on the Greetings wall';
+// 7. Для настроек.
+$string['showinnavigation'] = 'Show in navigation';
+$string['showinnavigationdesc'] = 'When enabled will show link in navigation';
