@@ -47,9 +47,19 @@ if (isguestuser()) {
     throw new moodle_exception('noguest');
 }
 
-// 7. Создание объекта формы.
+// 7.1 Проверка возможности делать публикации.
+$allowpost = has_capability('local/greetings:postmessages', $context);
+// 7.2 Проверка возможности смотреть публикации.
+$allowview = has_capability('local/greetings:viewmessages', $context);
+// 7.3 Проверка возможности удалять любые сообщения.
+$deleteanypost = has_capability('local/greetings:deleteanymessage', $context);
+// 7.4 Проверка возможности удалять свои сообщения.
+$deletepost = has_capability('local/greetings:deletemessage', $context);
+
+// 8. Создание объекта формы.
 $messageform = new local_greetings_message_form();
 
+// 8.1 Получение данных из формы.
 if ($data = $messageform->get_data()) {
     require_capability('local/greetings:postmessages', $context);
 
@@ -59,43 +69,48 @@ if ($data = $messageform->get_data()) {
         $record = new stdClass;
         $record->message = $message;
         $record->timecreated = time();
+        $record->userid = $USER->id;
 
         $DB->insert_record('local_greetings_messages', $record);
     }
 }
 
-// 8. Вывод HTML.
+// 9. Удаление поста.
+$action = optional_param('action', '', PARAM_TEXT);
+
+// 9.1 Проверяем права пользователя на удаление.
+if ($action == 'del') {
+    $id = required_param('id', PARAM_TEXT);
+
+    if ($deleteanypost || $deletepost) {
+        $params = array('id' => $id);
+
+        if (!$deleteanypost) {
+            $params += ['userid' => $USER->id];
+        }
+
+        $DB->delete_records('local_greetings_messages', $params);
+
+        redirect($PAGE->URL);
+    }
+}
+
+// 10. Вывод HTML.
 echo $OUTPUT->header();
 
+// 10.1 Должен быть залогинен.
 if (isloggedin()) {
     echo local_greetings_get_greeting($USER);
 } else {
     echo get_string('greetinguser', 'local_greetings');
 }
 
-// 9.1 Проверка возможности делать публикации.
-$allowpost = has_capability('local/greetings:postmessages', $context);
-// 9.2 Проверка возможности смотреть публикации.
-$allowview = has_capability('local/greetings:viewmessages', $context);
-// 9.2 Проверка возможности удалять любые сообщения.
-$deleteanypost = has_capability('local/greetings:deleteanymessage', $context);
-
-$action = optional_param('action', '', PARAM_TEXT);
-
-if ($action == 'del') {
-    $id = required_param('id', PARAM_TEXT);
-
-    if ($deleteanypost) {
-        $params = array('id' => $id);
-
-        $DB->delete_records('local_greetings_messages', $params);
-    }
-}
-
+// 10.2 Отобразим форму, если есть право постить.
 if ($allowpost) {
     $messageform->display();
 }
 
+// 10.3 Отобразим посты, если есть право смотреть.
 if ($allowview) {
     $userfields = \core_user\fields::for_name()->with_identity($context);
     $userfieldssql = $userfields->get_sql('u');
@@ -107,6 +122,7 @@ if ($allowview) {
 
     $messages = $DB->get_records_sql($sql);
 
+    // 10.4 Вывод постов.
     echo $OUTPUT->box_start('card-columns');
 
     foreach ($messages as $m) {
@@ -117,8 +133,9 @@ if ($allowview) {
         echo html_writer::start_tag('p', array('class' => 'card-text'));
         echo html_writer::tag('small', userdate($m->timecreated), array('class' => 'card'));
         echo html_writer::end_tag('p');
-        echo html_writer::end_tag('div');
-        if ($deleteanypost) {
+
+        // 10.5 Вывод кнопки удаления в зависимости от прав.
+        if ($deleteanypost || ($deletepost && $m->userid == $USER->id)) {
             echo html_writer::start_tag('p', array('class' => 'card-footer text-center'));
             echo html_writer::link(
                 new moodle_url(
@@ -129,6 +146,8 @@ if ($allowview) {
             );
             echo html_writer::end_tag('p');
         }
+
+        echo html_writer::end_tag('div');
         echo html_writer::end_tag('div');
     }
 

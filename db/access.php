@@ -50,5 +50,13 @@ $capabilities = array(
         'archetypes' => array(
             'manager' => CAP_ALLOW,
         )
+    ),
+    'local/greetings:deletemessage' => array(
+        'riskbitmask' => RISK_SPAM,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(
+            'user' => CAP_ALLOW,
+        )
     )
 );
