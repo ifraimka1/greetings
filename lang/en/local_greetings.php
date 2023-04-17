@@ -46,6 +46,8 @@ $string['greetings:viewmessages'] = 'View messages on the Greetings wall';
 $string['greetings:postmessages'] = 'Post a new message on the Greetings wall';
 $string['greetings:deleteanymessage'] = 'Delete any message on the Greetings wall';
 $string['greetings:deletemessage'] = 'Delete user\'s message on the Greetings wall';
+$string['greetings:editanymessage'] = 'Edit any message on the Greetings wall';
+$string['greetings:editmessage'] = 'Edit user\'s message on the Greetings wall';
 // 7. Для настроек.
 $string['showinnavigation'] = 'Show in navigation';
 $string['showinnavigationdesc'] = 'When enabled will show link in navigation';

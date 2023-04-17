@@ -55,6 +55,10 @@ $allowview = has_capability('local/greetings:viewmessages', $context);
 $deleteanypost = has_capability('local/greetings:deleteanymessage', $context);
 // 7.4 Проверка возможности удалять свои сообщения.
 $deletepost = has_capability('local/greetings:deletemessage', $context);
+// 7.5 Возможность редактировать любые сообщения.
+$editanypost = has_capability('local/greetings:editanymessage', $context);
+// 7.6 Возможность редактировать собственные сообщения
+$editpost = has_capability('local/greetings:editmessage', $context);
 
 // 8. Создание объекта формы.
 $messageform = new local_greetings_message_form();
@@ -87,6 +91,21 @@ if ($action == 'del') {
         $params = array('id' => $id);
 
         if (!$deleteanypost) {
+            $params += ['userid' => $USER->id];
+        }
+
+        $DB->delete_records('local_greetings_messages', $params);
+
+        redirect($PAGE->URL);
+    }
+} else if ($action == 'edit') {
+    require_sesskey();
+    $id = required_param('id', PARAM_TEXT);
+
+    if ($editanypost || $editpost) {
+        $params = array('id' => $id);
+
+        if (!$editanypost) {
             $params += ['userid' => $USER->id];
         }
 
@@ -141,9 +160,18 @@ if ($allowview) {
             echo html_writer::link(
                 new moodle_url(
                     '/local/greetings/index.php',
+                    array('action' => 'edit', 'id' => $m->id, 'sesskey' => sesskey())
+                ),
+                $OUTPUT->pix_icon('t/editinline', ''),
+                array('role' => 'button', 'aria-label' => get_string('edit'), 'title' => get_string('edit'))
+            );
+            echo html_writer::link(
+                new moodle_url(
+                    '/local/greetings/index.php',
                     array('action' => 'del', 'id' => $m->id, 'sesskey' => sesskey())
                 ),
-                $OUTPUT->pix_icon('t/delete', '') . get_string('delete')
+                $OUTPUT->pix_icon('t/delete', ''),
+                array('role' => 'button', 'aria-label' => get_string('delete'), 'title' => get_string('delete'))
             );
             echo html_writer::end_tag('p');
         }
